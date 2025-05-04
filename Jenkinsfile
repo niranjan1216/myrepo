@@ -4,30 +4,54 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                // Pull from GitHub or assume it's already checked out
                 echo 'Code checked out'
+                // Assuming code is already pulled via SCM
             }
         }
 
         stage('Compile') {
             steps {
-                sh 'mkdir -p build'
-                sh 'javac -d build HelloWorld.java HelloWorldTest.java'
+                echo 'Compiling Java files...'
+                sh 'javac HelloWorld.java HelloWorldTest.java'
             }
         }
 
         stage('Test') {
             steps {
-                echo 'Running test cases...'
-                sh 'java -cp build HelloWorldTest'
+                echo 'Running tests...'
+                sh 'java HelloWorldTest'
             }
         }
 
         stage('Package JAR') {
             steps {
-                sh 'jar cvf build/hello-world.jar -C build .'
+                echo 'Packaging into JAR...'
+                sh 'jar cvf hello-world.jar *.class'
             }
         }
+
+        stage('Run JAR') {
+            steps {
+                echo 'Running the packaged JAR...'
+                sh 'java -cp hello-world.jar HelloWorld'
+            }
+        }
+
+        stage('Archive Artifact') {
+            steps {
+                archiveArtifacts artifacts: '*.jar', fingerprint: true
+            }
+        }
+    }
+
+    post {
+        always {
+            echo 'Cleaning up...'
+            sh 'rm -f *.class'
+        }
+    }
+}
+
 
         stage('Run JAR') {
             steps {
