@@ -51,19 +51,3 @@ pipeline {
         }
     }
 }
-
-
-        stage('Run JAR') {
-            steps {
-                echo 'Running the JAR file...'
-                sh 'java -cp build/hello-world.jar HelloWorld'
-            }
-        }
-
-        stage('Archive Artifact') {
-            steps {
-                archiveArtifacts artifacts: 'build/*.jar', fingerprint: true
-            }
-        }
-    }
-}
