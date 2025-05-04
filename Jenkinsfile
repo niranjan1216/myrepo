@@ -2,38 +2,31 @@ pipeline {
     agent any
 
     stages {
-        stage('Checkout') {
-            steps {
-                echo 'Code checked out'
-                // Assuming code is already pulled via SCM
-            }
-        }
-
         stage('Compile') {
             steps {
                 echo 'Compiling Java files...'
-                sh 'javac HelloWorld.java HelloWorldTest.java'
+                bat 'javac HelloWorld.java HelloWorldTest.java'
             }
         }
 
         stage('Test') {
             steps {
                 echo 'Running tests...'
-                sh 'java HelloWorldTest'
+                bat 'java HelloWorldTest'
             }
         }
 
         stage('Package JAR') {
             steps {
                 echo 'Packaging into JAR...'
-                sh 'jar cvf hello-world.jar *.class'
+                bat 'jar cvf hello-world.jar *.class'
             }
         }
 
         stage('Run JAR') {
             steps {
                 echo 'Running the packaged JAR...'
-                sh 'java -cp hello-world.jar HelloWorld'
+                bat 'java -cp hello-world.jar HelloWorld'
             }
         }
 
@@ -47,7 +40,7 @@ pipeline {
     post {
         always {
             echo 'Cleaning up...'
-            sh 'rm -f *.class'
+            bat 'del /Q *.class'
         }
     }
 }
